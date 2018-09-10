@@ -1,1 +1,1 @@
-# python-bluez-peripheral-skeleton
+# python-bluez-peripheral-example
