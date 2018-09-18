@@ -1,0 +1,11 @@
+[Install]
+WantedBy=default.target
+
+[Unit]
+Description=Example BLE Gatt Server daemon
+After=syslog.target network.target dbus.service hostname.service lightdm.service network-manager.service NetworkManager.service bluetooth.service bluetooth-uart.service Gattadvertiser.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/bin/Gattserver.py
+Restart=on-abort
