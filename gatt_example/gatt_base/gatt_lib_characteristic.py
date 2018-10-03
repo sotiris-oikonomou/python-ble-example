@@ -3,8 +3,8 @@ import dbus.service
 import time
 import logging
 
-import gatt_lib_variables as gatt_var
-import gatt_lib_exceptions as gatt_except
+import gatt_example.gatt_base.gatt_lib_variables as gatt_var
+import gatt_example.gatt_base.gatt_lib_exceptions as gatt_except
 
 
 class Characteristic(dbus.service.Object):

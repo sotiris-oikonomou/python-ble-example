@@ -2,16 +2,9 @@ import dbus
 import dbus.service
 import time
 import logging
-import threading
 
-from struct import *
-
-import gatt_lib_variables as gatt_var
-import gatt_lib_exceptions as gatt_except
-import gatt_lib_service as gatt_service
-import gatt_lib_characteristic as gatt_char
-import gatt_lib_descriptor as gatt_descr
-import gatt_lib_config as gatt_config
+import gatt_example.gatt_base.gatt_lib_service as gatt_service
+import gatt_example.gatt_base.gatt_lib_characteristic as gatt_char
 
 
 class DeviceInformationService(gatt_service.Service):
@@ -50,9 +43,7 @@ class ManufacturerNameStringChrc(gatt_char.Characteristic):
         logger = logging.getLogger("rotating.logger")
         logger.debug('[%s][MANUFACTURER-NAME-CHAR][READ]', time.strftime('%d/%m %H:%M:%S'))
         # Manufacturer name: Name here
-        characteristic_value = []
-        characteristic_value.append(dbus.Byte(0x00))
-        characteristic_value.append(dbus.Byte(0x00))
+        characteristic_value = [dbus.Byte(0x00), dbus.Byte(0x00)]
 
         return characteristic_value
 
@@ -77,10 +68,7 @@ class ModelNumberStringChrc(gatt_char.Characteristic):
         logger = logging.getLogger("rotating.logger")
         logger.debug('[%s][MODEL-NUMBER-CHAR][READ]', time.strftime('%d/%m %H:%M:%S'))
         # Model number: '1.0'
-        characteristic_value = []
-        characteristic_value.append(dbus.Byte(0x31))
-        characteristic_value.append(dbus.Byte(0x2e))
-        characteristic_value.append(dbus.Byte(0x30))
+        characteristic_value = [dbus.Byte(0x31), dbus.Byte(0x2e), dbus.Byte(0x30)]
 
         return characteristic_value
 
@@ -105,9 +93,6 @@ class SerialNumberStringChrc(gatt_char.Characteristic):
         logger = logging.getLogger("rotating.logger")
         logger.debug('[%s][SERIAL-NUMBER-CHAR][READ]', time.strftime('%d/%m %H:%M:%S'))
         # Serial number: 'Serial Here'
-        characteristic_value = []
-
-        characteristic_value.append(dbus.Byte(0x00))
-        characteristic_value.append(dbus.Byte(0x00))
+        characteristic_value = [dbus.Byte(0x00), dbus.Byte(0x00)]
 
         return characteristic_value

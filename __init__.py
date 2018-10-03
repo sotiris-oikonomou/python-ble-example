@@ -1,1 +1,0 @@
-name = "gatt_example"

@@ -7,8 +7,6 @@ import dbus.service
 import time
 import logging
 import argparse
-import array
-import sys
 import threading
 
 from signal import signal, SIGTERM
@@ -20,13 +18,11 @@ try:
 except ImportError:
     import gobject as GObject
 
-import gatt_lib_variables as gatt_var
-import gatt_lib_exceptions as gatt_except
-import gatt_lib_cycling_power_service as gatt_cycl_pow
-import gatt_lib_device_information_service as gatt_dev
-import gatt_lib_custom_control_service as gatt_cust_srv
-import gatt_lib_config as gatt_config
-import gatt_lib_variables as gatt_vars
+import gatt_example.gatt_base.gatt_lib_variables as gatt_var
+import gatt_example.gatt_implementations.gatt_lib_cycling_power_service as gatt_cycl_pow
+import gatt_example.gatt_implementations.gatt_lib_device_information_service as gatt_dev
+import gatt_example.gatt_implementations.gatt_lib_custom_service as gatt_cust_srv
+import gatt_example.configuration.gatt_lib_config as gatt_config
 
 mainloop = None
 
@@ -49,9 +45,8 @@ class Application(dbus.service.Object):
         self.add_service(gatt_cycl_pow.CyclingPowerService(bus, 1))
         logger.debug('[%s] Adding Cycling power service', time.strftime('%d/%m %H:%M:%S'))
 
-        self.add_service(gatt_cust_srv.CustomControlService(bus, 2))
-        logger.debug('[%s] Adding Custom Control service', time.strftime('%d/%m %H:%M:%S'))
-
+        self.add_service(gatt_cust_srv.CustomGattService(bus, 2))
+        logger.debug('[%s] Adding Custom service', time.strftime('%d/%m %H:%M:%S'))
 
     def get_path(self):
         return dbus.ObjectPath(self.path)
@@ -135,7 +130,7 @@ def run_gatt_peripheral():
 def signal_handle(signum, frame):
     logger = logging.getLogger("rotating.logger")
     logger.debug('[%s] SIGTERM Received, exiting', time.strftime('%d/%m %H:%M:%S'))
-    gatt_vars.sigterm_thread_exit = True
+    gatt_var.sigterm_thread_exit = True
 
     global mainloop
     mainloop.quit()
@@ -153,7 +148,6 @@ def main():
     logger = logging.getLogger("rotating.logger")
     log_file_bytes = 1048576 * 5
     log_files = 3
-    logging_folder = '/var/log/GattLogs'
     logging_file = '/var/log/GattLogs/Gattperipheral.log'
     logger.setLevel(logging.DEBUG)
     rotating_handler = RotatingFileHandler(logging_file, maxBytes=log_file_bytes, backupCount=log_files)

@@ -2,22 +2,16 @@ import dbus
 import dbus.service
 import time
 import logging
-import threading
-
-from struct import *
-from random import randint
 
 try:
     from gi.repository import GObject
 except ImportError:
     import gobject as GObject
 
-import gatt_lib_variables as gatt_var
-import gatt_lib_exceptions as gatt_except
-import gatt_lib_service as gatt_service
-import gatt_lib_characteristic as gatt_char
-import gatt_lib_descriptor as gatt_descr
-import gatt_lib_config as gatt_config
+import gatt_example.gatt_base.gatt_lib_variables as gatt_var
+import gatt_example.gatt_base.gatt_lib_service as gatt_service
+import gatt_example.gatt_base.gatt_lib_characteristic as gatt_char
+import gatt_example.configuration.gatt_lib_config as gatt_config
 
 
 class CyclingPowerService(gatt_service.Service):
@@ -56,12 +50,10 @@ class CyclingPowerMeasurementChrc(gatt_char.Characteristic):
 
     def power_msrmt_cb(self):
         logger = logging.getLogger("rotating.logger")
-        characteristic_value = []
 
         # 1st byte - 2nd byte: Flags. We support Instantaneous Power Data only nothing else.
         # 16bit field
-        characteristic_value.append(dbus.Byte(0x00))
-        characteristic_value.append(dbus.Byte(0x00))
+        characteristic_value = [dbus.Byte(0x00), dbus.Byte(0x00)]
 
         power_16bit = 150
         lso_mask = 0xFF
@@ -132,11 +124,8 @@ class CyclingPowerFeatureChrc(gatt_char.Characteristic):
         # Return Everything as 0 bits.
         # Value: 000000000000000000000000000000000
         # 32bits field
-        characteristic_value = []
-        characteristic_value.append(dbus.Byte(0x00))
-        characteristic_value.append(dbus.Byte(0x00))
-        characteristic_value.append(dbus.Byte(0x00))
-        characteristic_value.append(dbus.Byte(0x00))
+        characteristic_value = [dbus.Byte(0x00), dbus.Byte(0x00), dbus.Byte(0x00), dbus.Byte(0x00)]
+
         if gatt_config.debug_log:
             logger.debug('[%s][CYCLING-POWER-FEATURE-CHAR] Read characteristic values: %s',
                          time.strftime('%d/%m %H:%M:%S'),
@@ -166,8 +155,8 @@ class CyclingPowerSensorLocationChrc(gatt_char.Characteristic):
 
         # 8 bit unsigned field
         # Return 'Rear Wheel' as the sensor location.
-        characteristic_value = []
-        characteristic_value.append(dbus.Byte(12))
+        characteristic_value = [dbus.Byte(12)]
+
         if gatt_config.debug_log:
             logger.debug('[%s][CYCLING-POWER-SENSOR-LOCATION-CHAR] Read characteristic values: %s',
                          time.strftime('%d/%m %H:%M:%S'),

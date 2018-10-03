@@ -4,11 +4,9 @@ import dbus
 import dbus.exceptions
 import dbus.mainloop.glib
 import dbus.service
-import array
 import logging
 import atexit
 import time
-import sys
 import threading
 
 from signal import signal, SIGTERM
@@ -20,10 +18,8 @@ try:
 except ImportError:
     import gobject as GObject
 
-import gatt_lib_variables as gatt_vars
-import gatt_lib_advertisement as gatt_adv
-
-from random import randint
+import gatt_example.gatt_base.gatt_lib_variables as gatt_vars
+import gatt_example.gatt_base.gatt_lib_advertisement as gatt_adv
 
 mainloop = None
 
@@ -36,10 +32,8 @@ class CyclingAdvertisements(gatt_adv.Advertisement):
 
         self.add_service_uuid('1818')
         logger.debug('[%s] Adding cycling power advertisement', time.strftime('%d/%m %H:%M:%S'))
-        # self.add_service_uuid('1826')
-        # logger.debug('[%s] Adding fitness machine advertisement', time.strftime('%d/%m %H:%M:%S'))
         self.add_manufacturer_data(0xFFFF, [0x00, 0x01, 0x02, 0x03, 0x04])
-        # self.add_service_data('1826', [0x01,0x20,0x00]) #TODO: Find out what needs to be here
+        # self.add_service_data('1818', [0x01,0x20,0x00]) #TODO: Find out what needs to be here
         self.add_local_name('DevName')
         self.include_tx_power = True
 
@@ -111,8 +105,8 @@ def signal_handle(signum, frame):
 
     global mainloop
     mainloop.quit()
-    sleepTime = 2
-    time.sleep(sleepTime)
+    sleep_time = 2
+    time.sleep(sleep_time)
     exit(0)
 
 
@@ -125,7 +119,6 @@ def main():
     logger = logging.getLogger("rotating.logger")
     log_file_bytes = 1048576 * 5
     log_files = 3
-    logging_folder = '/var/log/GattLogs'
     logging_file = '/var/log/GattLogs/Gattadvertiser.log'
     logger.setLevel(logging.DEBUG)
     rotating_handler = RotatingFileHandler(logging_file, maxBytes=log_file_bytes, backupCount=log_files)
