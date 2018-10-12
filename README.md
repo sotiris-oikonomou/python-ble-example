@@ -1,4 +1,4 @@
-# python-bluez-peripheral-example
+# BLE peripheral and central example in python using Bluez and Dbus
 
 ### To enable the peripheral mode in gatt (server mode) you must enable the experimental features of the bluez stack
 
